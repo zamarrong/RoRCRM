@@ -1,0 +1,87 @@
+.col-md-2
+	.avatar-container
+		= product_image(@product)
+.col-md-9	
+	%p
+		%h3= "#{@product.description} #{@product.brand} #{@product.model}"
+	%p
+		%label Código:
+		= @product.code
+	%p
+		%label Serie:
+		= @product.serial
+	%p
+		%label Año:
+		= @product.year
+	%p
+		%label Precio:
+		= number_to_currency(@product.price)
+		= @product.price_notes
+	- if current_user.admin
+		%p 
+			%label Inversion:
+			= number_to_currency(@product.investment)
+			= @product.investment_notes
+		- @product.costs.each do |cost|
+			%p
+				%label Costo:
+				= number_to_currency(cost.total)
+				= cost.notes
+		%p 
+			%label Utilidad:
+			= number_to_currency(@product.profit)
+			= @product.profit_notes
+	%p
+		%label Número de requerimiento o factura:
+		= @product.requirement_id
+	%p
+		= "Maquinaria ya no esta en nuestras instalaciones" if @product.is_not_here?
+	%p
+		= "Maquinaria vendida y posiblemente en nuestras instalaciones" if @product.is_sold_and_here
+	%p
+		= "Hay algún pendiente con la máquina" if @product.has_issues?
+	%p
+		%label Notas
+		%br
+		= simple_format @product.notes
+
+	%p
+		%label Video
+		- if @product.video
+			= link_to @product.video, @product.video
+	
+	- if not @product.opportunities.blank?
+		%br
+		%br
+		%h4 Oportunidades
+		%table.table.table-hover
+			%thead
+				%th Cliente
+				%th Empleado
+				%th Moneda
+				%th Valoración
+				%th Fecha de apertura
+				%th Fecha de vencimiento
+				%th Precio
+				%th Monto total
+				%th Cerrado
+			%tbody
+				- @product.opportunities.each do |opportunity|
+					%tr
+						%td= link_to opportunity.client.name, client_path(opportunity.client)
+						%td= opportunity.user.name
+						%td= opportunity.currency
+						%td= opportunity.valuation
+						%td= opportunity.opening_date.strftime('%d/%m/%Y') if !opportunity.opening_date.nil?
+						%td= opportunity.due_date.strftime('%d/%m/%Y') if !opportunity.due_date.nil?
+						%td= number_to_currency(opportunity.price)
+						%td= number_to_currency(opportunity.total)
+						%td= opportunity.closed ? 'Si' : 'No'
+
+	
+	
+.col-md-1
+	= link_to "Editar", edit_product_path(@product)
+	- if current_user.admin?
+		= link_to 'Borrar', product_path(@product), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+.clear

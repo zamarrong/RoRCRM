@@ -1,0 +1,24 @@
+= form_for [@parent, @contact] do |f|
+	.col-md-12
+		%label Contacto
+	.col-md-3 Nombre
+	.col-md-9
+		= f.text_field :name, class: "form-control", required: 'required'
+	.col-md-3 Puesto
+	.col-md-9
+		= f.text_field :position, class: "form-control"
+	.col-md-3 Teléfono 1
+	.col-md-9
+		= f.text_field :telephone, class: "form-control"
+	.col-md-3 Teléfono 2
+	.col-md-9
+		= f.text_field :telephone_2, class: "form-control"
+	.col-md-3 Email
+	.col-md-9
+		= f.text_field :email, class: "form-control"
+		- if params[:parent] == 'supplier'
+			= f.hidden_field :supplier_id, value: @contact.supplier.id
+		- else
+			= f.hidden_field :client_id, value: @contact.client.id
+	.col-md-12
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  quantity: 1.5
+  part_number: MyString
+  description: MyString
+  price: 9.99
+  purchase_order_id: 1
+
+two:
+  quantity: 1.5
+  part_number: MyString
+  description: MyString
+  price: 9.99
+  purchase_order_id: 1

@@ -1,0 +1,152 @@
+.col-md-10
+	%h2 Inventario
+	%br
+		= link_to "Nuevo producto", new_product_path, class: ['btn', 'btn-default']
+		= link_to "Descargar lista", products_path(:format => :xlsx), class: ['btn', 'btn-default']
+		- if current_user.admin?
+			= link_to "Importar inventario de HF", '#', class: ['btn', 'btn-default'], id: 'import-link'
+			= form_tag import_products_path, multipart: true, id: 'hf-inventory-form' do
+				= file_field_tag :file, id: 'hf-inventory', class: 'hidden'
+				= submit_tag 'Hola', class:'hidden', id: 'hf-submit'
+
+	%br
+.col-md-2
+	%br
+	= form_tag products_path, :method => :get do
+		#clients
+			= hidden_field_tag :current_inventory, @current_inventory
+			= text_field_tag :search, params[:search], class: 'form-control'
+			%span.search-addon.input-group-addon
+				= button_tag type: 'submit' do
+					%i.glyphicon.glyphicon-search
+.col-md-12
+	.tabpanel
+		%ul.nav.nav-tabs{role: "tablist"}
+			%li{role: "presentation", class: ("active" if @current_inventory == "inventory")}
+				%a{href:"#inventory", "data-toggle" => "tab", "aria-controls" => "inventory"}
+					Maquinaria en inventario
+			%li{role: "presentation", class: ("active" if @current_inventory == "sold")}
+				%a{href:"#sold", "data-toggle" => "tab", "aria-controls" => "sold"}
+					Maquinaria vendida
+			%li{role: "presentation", class: ("active" if @current_inventory == "hfinventory")}
+				%a{href:"#hfinventory", "data-toggle" => "tab", "aria-controls" => "hfinventory"}
+					Inventario de HF
+	.tab-content
+		#inventory.tab-pane{role: "tabpanel", class: ("active" if @current_inventory == "inventory")}
+			%table.table.table-hover
+				%thead
+					%th Código
+					%th 
+						= link_to url_for(params.merge(order: :description_string, direction: order_value(@headers[:description_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:description_string])]}
+							Descripción
+					%th
+						= link_to url_for(params.merge(order: :brand_string, direction: order_value(@headers[:brand_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:brand_string])]}
+							Marca
+					%th Modelo
+					%th Serie
+					%th
+						= link_to url_for(params.merge(order: :price, direction: order_value(@headers[:price]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:price])]}
+							Precio
+					%th Notas
+					%th
+					%th
+				%tbody
+					- @products.select{|p| not p.sold and not p.is_for_hf}.each do |product|
+						%tr{class: ("has-issues" if product.has_issues)}
+							%td= product.code
+							%td= link_to product.description, product_path(product)
+							%td= product.brand
+							%td= product.model
+							%td= product.serial
+							%td= number_to_currency(product.price)
+							%td= product.notes
+							%td= link_to "Marcar como vendido", sell_product_path(product)
+							%td
+								- if can? :update, product
+									= link_to "Editar", edit_product_path(product)
+							%td
+								- if can? :destroy, product
+									= link_to 'Borrar', product_path(product), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+		#sold.tab-pane{role: "tabpanel", class: ("active" if @current_inventory == "sold")}
+			%table.table.table-hover
+				%thead
+					%th Código
+					%th 
+						= link_to url_for(params.merge(order: :description_string, direction: order_value(@headers[:description_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:description_string])]}
+							Descripción
+					%th
+						= link_to url_for(params.merge(order: :brand_string, direction: order_value(@headers[:brand_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:brand_string])]}
+							Marca
+					%th Modelo
+					%th Serie
+					%th
+						= link_to url_for(params.merge(order: :price, direction: order_value(@headers[:price]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:price])]}
+							Precio
+					%th Notas
+					%th
+					%th
+				%tbody
+					- @products.select{|p| p.sold and not p.is_for_hf}.each do |product|
+						%tr{class: ("has-issues" if product.has_issues)}
+							%td= product.code
+							%td= simple_format product.description
+							%td= product.brand
+							%td= product.model
+							%td= product.serial
+							%td= number_to_currency(product.price)
+							%td= simple_format product.notes
+							%td= link_to "Regresar a inventario", return_product_path(product)
+							%td
+								- if can? :update, product
+									= link_to "Editar", edit_product_path(product)
+							%td
+								- if can? :destroy, product
+									= link_to 'Borrar', product_path(product), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+		#hfinventory.tab-pane{role: "tabpanel", class: ("active" if @current_inventory == "hfinventory")}
+			%table.table.table-hover
+				%thead
+					%th Código
+					%th 
+						= link_to url_for(params.merge(order: :description_string, direction: order_value(@headers[:description_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:description_string])]}
+							Descripción
+					%th
+						= link_to url_for(params.merge(order: :brand_string, direction: order_value(@headers[:brand_string]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:brand_string])]}
+							Marca
+					%th Modelo
+					%th Serie
+					%th
+						= link_to url_for(params.merge(order: :price, direction: order_value(@headers[:price]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:price])]}
+							Precio
+					%th Notas
+					%th
+					%th
+				%tbody
+					- @products.select{|p| p.is_for_hf}.each do |product|
+						%tr{class: ("has-issues" if product.has_issues)}
+							%td= product.code
+							%td= link_to product.description, product_path(product)
+							%td= product.brand
+							%td= product.model
+							%td= product.serial
+							%td= number_to_currency(product.price)
+							%td= product.notes
+							%td= link_to "Marcar como vendido", sell_product_path(product)
+							%td
+								- if can? :update, product
+									= link_to "Editar", edit_product_path(product)
+							%td
+								- if can? :destroy, product
+									= link_to 'Borrar', product_path(product), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+
+.col-md-12
+	.text-center
+		= paginate @products

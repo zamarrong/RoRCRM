@@ -1,0 +1,32 @@
+.col-md-12
+	%h2 Direcciones de envio
+	%br
+	= link_to "Nueva dirección de envio", new_shipping_address_path, class: ['btn', 'btn-default']
+	%br
+	%br
+
+
+- @shipping_addresses.each do |s|
+	.col-md-3
+		= simple_format s.name
+		%br
+		= simple_format s.address 
+		%br
+		= s.city
+		= s.state
+		= s.zip_code
+		%br
+		Tel. 1: 
+		= s.telephone_1
+		%br
+		Tel. 2: 
+		= s.telephone_2
+	.col-md-9
+		- if can? :update, s
+			= link_to "Editar", edit_shipping_address_path(s)
+		%br
+		- if can? :destroy, s
+			= link_to 'Borrar', shipping_address_path(s), :method => :delete, :data => { :confirm => '¿Estas seguro?' }
+	.clear
+	%br
+	%br 

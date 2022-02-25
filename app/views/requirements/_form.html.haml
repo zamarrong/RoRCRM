@@ -1,0 +1,33 @@
+= form_for @requirement do |f|
+  - if @requirement.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@requirement.errors.count, "error")} prohibited this requirement from being saved:"
+      %ul
+        - @requirement.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label 'Fecha'
+    .input-append.date.input-group
+      = f.text_field :date, 'data-format' => "dd/MM/yyyy", class: 'form-control', readonly: 'readonly'
+      %span.add-on.input-group-addon
+        %i.glyphicon.glyphicon-calendar
+  .field
+    = f.label 'Empleado'
+    = f.text_field "user", readonly: 'readonly', value: @requirement.user.name, class: 'form-control'
+    = f.hidden_field :user_id
+  .field
+    %label Cliente
+    #clients
+      = text_field_tag 'client_name', '', class: 'form-control typeahead', value: @requirement.client.name
+    = f.hidden_field :client_id, id: 'client_id'
+    %br
+  .field
+    = f.label 'Descripción'
+    = f.text_area :description, class: 'form-control'
+  
+  .field
+    = f.label 'Presupuesto'
+    = f.text_area :budget, class: 'form-control'
+  .actions
+    = f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

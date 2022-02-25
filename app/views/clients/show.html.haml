@@ -1,0 +1,157 @@
+.employee-container
+	.col-md-2
+		.avatar-container
+			= link_to client_path(@client) do
+				= avatar_image(@client)
+	.col-md-9
+		%h2= @client.name
+		%p= link_to @client.website, website_url(@client), :target => "_blank"
+		%p
+			%label Dirección
+			%br
+			= @client.address
+			%br
+			= "#{@client.city}, #{@client.state}, #{@client.zip_code}"
+			%br
+			= @client.country
+		
+	.col-md-1
+		- if current_user.admin
+			= link_to "Editar", edit_client_path(@client)
+			= link_to 'Borrar', client_path(@client), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+	.clear
+
+.col-md-8
+	%h3 Notas
+	= link_to new_client_note_path(@client, :parent => "client") do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar nota
+		%br
+		%br
+
+	- @client.notes.each do |note|
+		%p
+			%label= note.date.strftime('%d/%m/%Y %l:%M:%S %P')
+			= note.user.name if not note.user.blank?
+			%br
+			= note.content
+			%br
+			- if current_user.admin
+				= link_to "Editar", edit_note_path(note, :parent => "client")
+				= link_to 'Borrar', note_path(note, :parent => "client"), :method => :delete, :data => { :confirm => '¿Estas seguro?' }
+
+
+.col-md-4
+	%h3 Contactos
+	= link_to new_client_contact_path(@client, :parent => "client") do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar contacto
+		%br
+		%br
+	- @client.contacts.each do |contact|
+		%label.contact-name= contact.name
+		= contact.position
+		%p
+			%label Teléfonos
+			%br
+			= contact.telephone
+			%br
+			= contact.telephone_2
+		%p
+			%label Email
+			%br
+			= contact.email
+		%p
+			- if current_user.admin
+				= link_to "Editar", edit_contact_path(contact, :parent => "client")
+				= link_to 'Borrar', contact_path(contact, :parent => "client"), :method => :delete, :data => { :confirm => '¿Estas seguro?' }
+			%br
+			%br
+.col-md-8
+	%h3 Requerimientos
+	= link_to new_requirement_path(:client_id => @client.id) do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar requerimiento
+		%br
+		%br
+	%table.table.table-hover
+		%tr
+			%th Fecha
+			%th Usuario
+			%th Descripción
+			%th Presupuesto
+			%th
+			%th
+			- if current_user.admin
+				%th
+		- @client.requirements.each do |requirement|
+			%tr
+				%td= requirement.date
+				- if not requirement.user.blank?
+					%td= requirement.user.name
+				- else
+					%td
+				%td= simple_format requirement.description
+				%td= simple_format requirement.budget
+				- if can? :update, requirement
+					%td= link_to 'Editar', edit_requirement_path(requirement)
+				- if can? :destroy, requirement
+					%td= link_to 'Borrar', requirement, :method => :delete, :data => { :confirm => 'Are you sure?' }
+.col-md-4
+.col-md-8
+	%h3 Oportunidades
+	= link_to new_opportunity_path(:client_id => @client.id) do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar oportunidad
+		%br
+		%br
+	- if @client.opportunities.blank?
+		%p No se encontro ninguna oportunidad
+	- else
+		%table.table.table-hover
+			%thead
+				%th Empleado
+				%th Moneda
+				%th Valoración
+				%th Fecha de apertura
+				%th Fecha de vencimiento
+				%th Modificada el
+				%th Precio
+				%th Cerrado
+				%th
+				%th
+				%th
+			%tbody
+				- @client.opportunities.each do |opportunity|
+					%tr
+						%td= opportunity.user.name
+						%td= opportunity.currency
+						%td= opportunity.valuation
+						%td= opportunity.opening_date.strftime('%d/%m/%Y') if !opportunity.opening_date.nil?
+						%td= opportunity.due_date.strftime('%d/%m/%Y') if !opportunity.due_date.nil?
+						%td= opportunity.updated_at.strftime('%d/%m/%Y')
+						%td= number_to_currency(opportunity.price)
+						%td= opportunity.closed ? 'Si' : 'No'
+						%td= link_to "Cotización", cotizacion_opportunity_path(opportunity)
+						- if can? :update, opportunity
+							%td= link_to "Editar", edit_opportunity_path(opportunity)
+						- if can? :destroy, opportunity
+							%td= link_to 'Borrar', opportunity_path(opportunity), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+.col-md-4
+	%h3 Documentos
+	= form_for [@client, @client.documents.build] do |f|
+		= link_to '#', class: 'file-input-link' do
+			%span.glyphicon.glyphicon-plus-sign
+			Agregar documento
+			%br
+			%br
+		= f.file_field :content, class: ['hidden', 'hidden-file-input']
+		= f.hidden_field :client_id, value: @client.id
+	
+	- @client.documents.delete(@client.documents.last)
+	- @client.documents.each do |document|
+		.col-md-6.document-links
+			%p
+				%strong= link_to File.basename(document.content.url), document.content.url
+				- if current_user.admin
+					= link_to "Borrar", document_path(document), :method => :delete, :data => { :confirm => '¿Estas seguro?' }

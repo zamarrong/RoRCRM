@@ -1,0 +1,12 @@
+.fields.cost-fields
+	.col-md-6
+		%label Costo
+		= f.number_field :total, class: 'form-control profit-change total', step: 'any'
+	.col-md-6
+		%label Notas
+		= f.text_field :notes, class: 'form-control'
+	.col-md-12
+		= f.hidden_field :id
+		= link_to_remove_fields "Borrar", f
+		%br
+		%br

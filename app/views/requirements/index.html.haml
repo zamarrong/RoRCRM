@@ -1,0 +1,43 @@
+.col-md-10
+  %h1 Requerimientos
+  = link_to "Nuevo requerimiento", new_requirement_path, class: ['btn', 'btn-default']
+  %br
+  %br
+.col-md-2
+  %br
+  = form_tag requirements_path, :method => :get do
+    #clients
+      = text_field_tag :search, params[:search], class: 'form-control'
+      %span.search-addon.input-group-addon
+        = button_tag type: 'submit' do
+          %i.glyphicon.glyphicon-search
+.col-md-12
+  %table.table.table-hover
+    %tr
+      %th Fecha
+      %th Cliente
+      %th Empleado
+      %th Descripción
+      %th Presupuesto
+      %th
+      %th
+      - if current_user.admin
+        %th
+
+    - @requirements.each do |requirement|
+      %tr
+        %td= requirement.date
+        - if not requirement.client.blank?
+          %td= link_to requirement.client.name, client_path(requirement.client)
+        - else
+          %td
+        - if not requirement.user.blank?
+          %td= requirement.user.name
+        - else
+          %td
+        %td= simple_format requirement.description
+        %td= simple_format requirement.budget
+        - if can? :update, requirement
+          %td= link_to 'Editar', edit_requirement_path(requirement)
+        - if can? :destroy, requirement
+          %td= link_to 'Borrar', requirement, :method => :delete, :data => { :confirm => 'Are you sure?' }

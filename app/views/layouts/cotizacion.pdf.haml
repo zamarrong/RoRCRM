@@ -1,0 +1,143 @@
+!!!
+%html
+	%head
+		%meta{:charset => "utf-8"}
+		= wicked_pdf_stylesheet_link_tag "opportunities"
+%body
+	.col-md-6
+		- if @opportunity.company == 'Industrias Frimar'
+			= wicked_pdf_image_tag '/images/industrias.png'
+		- else
+			= wicked_pdf_image_tag '/images/herramientas.png'
+	.col-md-6
+		%label Fecha:
+		= @opportunity.opening_date.strftime('%d/%m/%Y') if !@opportunity.opening_date.nil?
+		%h2 Cotización
+	.clear
+	.col-md-6
+		%h3 Datos del Cliente
+		.row
+			.col-md-3
+				%label Nombre:
+			.col-md-9
+				= @opportunity.contact.name
+		.row
+			.col-md-3
+				%label Empresa:
+			.col-md-9
+				= @opportunity.client.name
+		.row
+			.col-md-3
+				%label Correo:
+			.col-md-9
+				= @opportunity.contact.email
+		.row
+			.col-md-3
+				%label Teléfono:
+			.col-md-9
+				= @opportunity.contact.telephone
+		.row
+			.col-md-3
+				%label Estado:
+			.col-md-9
+				= @opportunity.client.state
+	.col-md-6
+		%h3 Contacto vendedor
+		.row
+			.col-md-3
+				%label Nombre:
+			.col-md-9
+				= @opportunity.user.name
+		.row
+			.col-md-3
+				%label Correo:
+			.col-md-9
+				= @opportunity.user.email
+		.row
+			.col-md-3
+				%label Celular:
+			.col-md-9
+				= @opportunity.user.mobile_phone
+		.row
+			.col-md-3
+				%label Teléfono:
+			.col-md-9
+				= @opportunity.user.work_phone
+	.clear
+	.cotizacion-box
+		.col-md-6
+			%h5 Condiciones de pago
+			%p= @opportunity.payment_conditions
+		.col-md-3
+			%h5 Tipo de moneda
+			%p= @opportunity.currency
+		.col-md-3
+			%h5 Folio
+			%p= @opportunity.full_folio
+		.clear
+
+	#cotizacion-table.cotizacion-box
+		.col-md-6
+			%h5 Descripción
+		.col-md-2
+			%h5 Precio unitario
+		.col-md-2
+			%h5 Cantidad
+		.col-md-2
+			%h5 Total
+		- @opportunity.quotes.each do |quote|
+			.col-md-6.top-line
+				%p= simple_format quote.description
+				- if not quote.product.blank?
+					%p= "Marca: #{quote.product.brand}" if !quote.product.brand.blank?
+					%p= "Modelo: #{quote.product.model}" if !quote.product.model.blank?
+					%p= "Año: #{quote.product.year}" if !quote.product.year.blank?
+					%p= "Serie: #{quote.product.serial}" if !quote.product.serial.blank?
+					%p= wicked_pdf_image_tag quote.product.image, class: "quote-image" if !quote.product.image.blank?
+					- if quote.product.video
+						%p
+							Video: 
+							= link_to quote.product.video, quote.product.video
+			.col-md-2.top-line
+				= number_with_precision(quote.price, precision: 2, separator: '.', delimiter: ',')
+			.col-md-2.top-line
+				= quote.quantity
+			.col-md-2.top-line
+				= number_with_precision(quote.price * quote.quantity, precision: 2, separator: '.', delimiter: ',')
+			.clear
+		.clear
+
+	- if !@opportunity.special_notes.blank?
+		.cotizacion-box
+			.col-md-12
+				%h5 Notas especiales
+				%p= @opportunity.special_notes
+			.clear
+
+	.col-md-7.terms-and-conditions
+		%p Términos y condiciones de cotización:
+		%p Salvo que las partes acuerden otra cosa por escrito, las cotizaciones escritas tendrán vigencia de hasta 15 días naturales dentro de los cuales quedaran sujetas a modificaciones con previo aviso o podrá ser anulada anticipadamente mediante una notificación por escrito. Una vez transcurrido el tiempo establecido los precios están sujetos a cambio sin previo aviso. 
+		%p Condiciones de Pagos:
+		%p Aceptamos transferencias electrónicas y depósitos en cheques. Para pago en dólares será tomado en cuenta el tipo de cambio del SAT en el día de pago.  Para cualquier aclaración favor de contactar el departamento de facturación al número telefónico (625-58-771-99) y revisarlo con el vendedor. 
+		%p Responsabilidades del Cliente:
+		%ul
+			%li Verificar que sus datos en la cotización sean los correctos, las cantidades y el producto descrito.
+			%li Proporcionar los datos para facturación y al cumplimiento de los Términos y Condiciones.
+
+	.col-md-4.cotizacion-box.pull-right
+		%br
+		.row
+			.col-md-6
+				%label Subtotal
+			.col-md-6
+				= number_with_precision(@opportunity.subtotal, precision: 2, separator: '.', delimiter: ',')
+		.row
+			.col-md-6
+				%label IVA
+			.col-md-6
+				= "#{@opportunity.tax}%"
+		.row
+			.col-md-6
+				%label Total
+			.col-md-6
+				= number_with_precision(@opportunity.total, precision: 2, separator: '.', delimiter: ',')

@@ -1,0 +1,11 @@
+workbook = xlsx_package.workbook
+@contacts = Contact.all.includes(:client)
+title = workbook.styles.add_style(:b => true)
+workbook.add_worksheet(name: "Basic work sheet") do |sheet|
+  sheet.add_row ["Compañia","Página web","Dirección calle","Ciudad","Estado","Codigo postal","Pais","Contacto nombre", "Teléfono 1", "Teléfono 2", "Email", "Empresa"], :style => title
+  @contacts.each do |c|
+  	if not c.client.blank?
+    	sheet.add_row [c.client.name, c.client.website, c.client.address, c.client.city, c.client.state, c.client.zip_code, c.client.country, c.name, c.telephone, c.telephone_2, c.email, c.client.company]
+    end
+  end
+end

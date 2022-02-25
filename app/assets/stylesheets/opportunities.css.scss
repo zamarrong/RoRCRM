@@ -1,0 +1,19 @@
+// Place all the styles related to the Opportunities controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.cotizacion-box{
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px; /* future proofing */
+	border: 2px solid #000;
+	margin:15px;
+}
+.product-description{
+	margin-bottom:20px;
+}
+.product-description p{
+	margin:0;
+}
+#cotizacion-table{
+	min-height: 600px;
+}

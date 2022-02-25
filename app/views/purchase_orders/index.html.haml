@@ -1,0 +1,59 @@
+.col-md-9
+	%h2 Ordenes de compra
+.col-md-3
+	%br
+	= form_tag opportunities_path, :method => :get do
+		.input-group
+			= text_field_tag :search, params[:search], class: 'form-control'
+			%span.search-addon.input-group-addon
+				= button_tag type: 'submit' do
+					%i.glyphicon.glyphicon-search
+
+.clear
+.col-md-12
+	= link_to "Nueva orden de compra", new_purchase_order_path, class: ['btn', 'btn-default']
+	%br
+
+.col-md-12
+	- if @purchase_orders.blank?
+		%p No se encontro ninguna orden de compra
+	- else
+		%table.table.table-hover
+			%thead
+				%th PO #
+				%th 
+					= link_to url_for(params.merge(order: :supplier, direction: order_value(@headers[:supplier]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:supplier])]}
+						Proveedor
+				%th
+					= link_to url_for(params.merge(order: :user_name, direction: order_value(@headers[:user_name]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:user_name])]}
+						Empleado
+				%th Moneda
+				%th 
+					= link_to url_for(params.merge(order: :opening_date, direction: order_value(@headers[:opening_date]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:opening_date])]}
+						Fecha de apertura
+				%th Monto total
+				%th Numero de guia
+				%th
+				%th
+			%tbody
+				- @purchase_orders.each do |purchase_order|
+					%tr
+						%td= purchase_order.folio
+						%td= purchase_order.supplier.name
+						%td= purchase_order.user.name
+						%td= purchase_order.currency
+						%td= purchase_order.opening_date.strftime('%d/%m/%Y') if !purchase_order.opening_date.nil?
+						%td= number_to_currency(purchase_order.total)
+						%td= purchase_order.shipping_number
+						%td= link_to "Orden de compra", purchase_order_path(purchase_order)
+						- if can? :update, purchase_order
+							%td= link_to "Editar", edit_purchase_order_path(purchase_order)
+						- if can? :destroy, purchase_order
+							%td= link_to 'Borrar', purchase_order_path(purchase_order), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+
+		.text-center
+			= paginate @purchase_orders
+

@@ -1,0 +1,46 @@
+.col-md-12
+	= link_to "Nueva oportunidad", new_opportunity_path, class: ['btn', 'btn-default']
+	%br
+.col-md-12
+	- if @opportunities.blank?
+		%p No se encontro ninguna oportunidad
+	- else
+		%table.table.table-hover
+			%thead
+				%th 
+					= link_to url_for(params.merge(order: :client, direction: order_value(@headers[:client]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:client])]}
+						Cliente
+				%th
+					= link_to url_for(params.merge(order: :user_name, direction: order_value(@headers[:user_name]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:user_name])]}
+						Empleado
+				%th Moneda
+				%th Valoración
+				%th 
+					= link_to url_for(params.merge(order: :opening_date, direction: order_value(@headers[:opening_date]))) do
+						%span{class: ['glyphicon', icon_class(@headers[:opening_date])]}
+						Fecha de apertura
+				%th Monto total
+				%th Cerrado
+				%th
+				%th
+			%tbody
+				- @opportunities.each do |opportunity|
+					%tr
+						%td= opportunity.client.name
+						%td= opportunity.user.name
+						%td= opportunity.currency
+						%td= opportunity.valuation
+						%td= opportunity.opening_date.strftime('%d/%m/%Y') if !opportunity.opening_date.nil?
+						%td= number_to_currency(opportunity.total)
+						%td= opportunity.closed ? 'Si' : 'No'
+						%td= link_to "Cotización", cotizacion_opportunity_path(opportunity)
+						- if can? :update, opportunity
+							%td= link_to "Editar", edit_opportunity_path(opportunity)
+						- if can? :destroy, opportunity
+							%td= link_to 'Borrar', opportunity_path(opportunity), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+
+		.text-center
+			= paginate @opportunities
+

@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Client:
+  = @requirement.client_id
+%p
+  %b User:
+  = @requirement.user_id
+%p
+  %b Description:
+  = @requirement.description
+%p
+  %b Date:
+  = @requirement.date
+%p
+  %b Budget:
+  = @requirement.budget
+
+= link_to 'Edit', edit_requirement_path(@requirement)
+\|
+= link_to 'Back', requirements_path

@@ -1,0 +1,23 @@
+.fields
+	.col-md-12
+		%label Contacto
+	.col-md-3 Nombre
+	.col-md-9
+		= f.text_field :name, class: "form-control", required: 'required'
+	.col-md-3 Puesto
+	.col-md-9
+		= f.text_field :position, class: "form-control", required: 'required'
+	.col-md-3 Teléfono 1
+	.col-md-9
+		= f.text_field :telephone, class: "form-control"
+	.col-md-3 Teléfono 2
+	.col-md-9
+		= f.text_field :telephone_2, class: "form-control"
+	.col-md-3 Email
+	.col-md-9
+		= f.text_field :email, class: "form-control"
+	.col-md-12
+		= f.hidden_field :id
+		= link_to_remove_fields "Borrar contacto", f
+		%br
+		%br

@@ -1,0 +1,112 @@
+!!!
+%html
+	%head
+		%meta{:charset => "utf-8"}
+		= wicked_pdf_stylesheet_link_tag "opportunities"
+%body
+	.col-md-8
+		= wicked_pdf_image_tag '/images/' + @purchase_order.company.logo
+		%br
+		%br
+	.col-md-4
+		.col-md-6.bold= t('date')
+		.col-md-6.centered{class: purchase_color(@purchase_order)}= @purchase_order.opening_date.strftime('%d/%m/%Y')
+		.col-md-6.bold= t('po')
+		.col-md-6.normal-border.centered= @purchase_order.folio
+	.clear
+	.col-md-4
+		%table.purchase-table
+			%thead{class: purchase_head_color(@purchase_order)}
+				%tr 
+					%td= t('vendor')
+			%tbody
+				%tr
+					%td
+						= @purchase_order.supplier.name + @purchase_order.company.logo
+						%br
+						= @purchase_order.supplier.address
+						%br
+						= @purchase_order.supplier.city
+						= @purchase_order.supplier.state
+						= @purchase_order.supplier.country
+						= @purchase_order.supplier.zip_code
+						%br
+						= @purchase_order.supplier.website
+	.col-md-1
+	.col-md-3
+		%table.purchase-table
+			%thead{class: purchase_head_color(@purchase_order)}
+				%tr
+					%td= t('ship_to')
+			%tbody
+				%tr
+					%td
+						= @purchase_order.shipping_address.name
+						%br
+						= @purchase_order.shipping_address.address
+						%br
+						= @purchase_order.shipping_address.city
+						= @purchase_order.shipping_address.state
+						= @purchase_order.shipping_address.zip_code
+	.clear
+	%br
+	%br
+	.col-md-12
+		%table.purchase-table
+			%thead{class: purchase_head_color(@purchase_order)}
+				%tr.centered
+					%td= t('quantity')
+					%td= t('description')
+					%td= t('part_number')
+					%td.money= t('unit_price')
+					%td.money= t('total')
+			%tbody
+				- @purchase_order.purchase_items.each do |item|
+					%tr
+						%td.centered= item.quantity
+						%td.centered= simple_format 	item.description
+						%td.centered= item.part_number
+						%td.right.money= number_to_currency(item.price)
+						%td.right.money{class: purchase_color(@purchase_order)}= number_to_currency(item.quantity*item.price)
+				%tr.last-row
+					%td
+					%td
+					%td
+					%td.right.money= t('subtotal')
+					%td.right.money{class: purchase_color(@purchase_order)}= number_to_currency(@purchase_order.subtotal)
+	.clear
+	%br
+	%br
+	.col-md-8
+		.gray= t('other_comments')
+		.special-comments= simple_format @purchase_order.special_notes
+
+	.col-md-4.right
+		%table.table-right
+			%tr
+				%td.right.money= t('s_and_h')
+				%td.right.money= number_to_currency(@purchase_order.shipping_and_handling)
+			%tr
+				%td.right.money= t('other')
+				%td.right.money= number_to_currency(@purchase_order.other_charges)
+			%tr.double-line
+				%td.right.money.bold= t('total')
+				%td.right.money{class: purchase_color(@purchase_order)}= number_to_currency(@purchase_order.total)
+	.clear
+	%br
+	%br
+	%br
+	%br
+	.col-md-12.right
+		= t('authorized')
+		= @purchase_order.user.name
+		= @purchase_order.opening_date.strftime('%d/%m/%Y')
+	%br
+	%br
+	.col-md-12.centered
+		= t('questions')
+		%br
+		= "#{@purchase_order.user.name}, Office: #{@purchase_order.user.work_phone}, E-mail: #{@purchase_order.user.email}"
+	%br
+	%br
+	%br

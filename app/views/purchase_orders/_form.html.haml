@@ -1,0 +1,72 @@
+= form_for @purchase_order do |f|
+	.col-md-5
+		.col-md-4 Empresa
+		.col-md-8
+			= f.select :company, options_for_select(['Industrias Frimar','Herramientas Frimar','FMI'], @purchase_order.company), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-4 Idioma
+		.col-md-8
+			= f.select :language, options_for_select(['Español','English'], @purchase_order.language), {}, class: "form-control"
+		.col-md-4 Proveedor
+		.col-md-8
+			#suppliers
+				= text_field_tag 'supplier_name', '', class: 'form-control typeahead', value: @purchase_order.supplier.name
+			%br
+			= f.hidden_field :supplier_id, id: 'supplier_id'
+		.col-md-4 Contacto
+		.col-md-8
+			= f.select :contact_id, options_for_select( contact_options_supplier(@purchase_order), (@purchase_order.contact.id unless @purchase_order.contact.nil?)), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-4 
+		.col-md-8
+			= f.hidden_field :user_id
+		.col-md-4 Envio
+		.col-md-8 
+			= f.select :shipping_address_id, options_for_select(ShippingAddress.all.map{|c| [c.name, c.id]}, @purchase_order.shipping_address_id), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-4 Moneda
+		.col-md-8
+			= f.select :currency, options_for_select(['Dolares','Pesos'], @purchase_order.currency), {include_blank: true}, class: "form-control"
+		.col-md-4 Fecha de apertura
+		.col-md-8
+			.input-append.date.input-group
+				= f.text_field :opening_date, 'data-format' => "dd/MM/yyyy", class: 'form-control'
+				%span.add-on.input-group-addon
+					%i.glyphicon.glyphicon-calendar
+		.col-md-4 S&H
+		.col-md-8
+			= f.number_field :shipping_and_handling, class: "form-control total-change", step: "any"
+		.col-md-4 Otros cargos
+		.col-md-8
+			= f.number_field :other_charges, class: "form-control total-change", step: "any"
+		.col-md-4 Total
+		.col-md-8
+			= text_field_tag 'total','', class: "form-control", value: @purchase_order.total
+		.col-md-4 Notas especiales
+		.col-md-8
+			= f.text_area :special_notes, class: "form-control", rows: "4"
+		.col-md-4 Paquetería
+		.col-md-8
+			= f.text_field :shipping_company, class: "form-control"
+		.col-md-4 Número de guia
+		.col-md-8
+			= f.text_field :shipping_number, class: "form-control"
+			= f.hidden_field :user_id, value: current_user.id
+
+	.col-md-7
+		.col-md-2
+			%label Cantidad	
+		.col-md-3
+			%label Número de parte
+		.col-md-5
+			%label Descripción
+		.col-md-2
+			%label Precio unitario
+		= f.fields_for :purchase_items do |ff|
+			= render 'purchase_item_fields', :f => ff
+		.col-md-12
+			= link_to_add_fields "Agregar elemento", f, :purchase_items
+			%br
+			%br
+
+
+		
+	.narrow-wrapper
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

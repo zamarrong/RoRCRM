@@ -1,0 +1,18 @@
+= form_for [@parent, @note] do |f|
+	.col-md-12
+		%label Fecha
+		.input-append.date-time.input-group
+			= f.text_field :date, 'data-format' => "dd/MM/yyyy  H:M:S", class: 'form-control', value: Time.now.strftime("%d/%m/%Y %H:%M:%S")
+			%span.add-on.input-group-addon
+				%i.glyphicon.glyphicon-calendar
+		%label Nota
+		= f.text_area :content, class: 'form-control', rows: '10'
+		= f.hidden_field :user_id, value: current_user.id
+		- if params[:parent] == 'supplier'
+			= f.hidden_field :supplier_id, value: @note.supplier.id
+		- else
+			= f.hidden_field :client_id, value: @note.client.id
+		
+		%br
+		%br
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

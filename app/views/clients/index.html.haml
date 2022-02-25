@@ -1,0 +1,64 @@
+.col-md-6
+	%h2 Clientes
+	%br
+	= link_to "Nuevo cliente", new_client_path, class: ['btn', 'btn-default']
+	- if current_user.admin
+		= link_to "Descargar lista", clients_path(:format => :xlsx), class: ['btn', 'btn-default']
+		= link_to "Importar lista", '#', class:['btn', 'btn-default'], id: 'import-file'
+		= form_tag import_clients_path, multipart: true, id: 'file-form' do
+			= file_field_tag :file, class: 'hidden'
+			= hidden_field_tag :sumthing, value: "hey"
+	%br
+	%br
+.col-md-2
+	%label Resultados por página
+	= select_tag "per_page", options_for_select(['25','50','100','Ver todos'], cookies[:per_page]),{class: 'form-control'}
+.col-md-2
+	%label Ver por estado:
+	= form_tag clients_path, :method => "get", id: "state_form" do |f|
+		= select_tag "state" , options_for_select(['','Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas','Chihuahua','Coahuila','Colima','Distrito Federal','Durango','Estado de México','Guanajuato','Guerrero','Hidalgo','Jalisco','Michoacán','Morelos','Nayarit','Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí','Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas','Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','District of Columbia','Puerto Rico','Guam','American Samoa','U.S. Virgin Islands','Northern Mariana Islands']), {class: 'form-control'} 
+.col-md-2
+	%br
+	= form_tag clients_path, :method => :get do
+		#clients
+			= text_field_tag :search, params[:search], class: 'typeahead form-control'
+			%span.search-addon.input-group-addon
+				= button_tag type: 'submit' do
+					%i.icon-search
+
+.clear
+- if @clients.blank?
+	.col-md-12
+		%p No se encontro ningun cliente
+- else
+	.employee-container
+		.col-md-12
+			%table.table.table-hover
+				%thead
+					%th 
+						= link_to url_for(params.merge(order: :client_name, direction: order_value(@headers[:client_name]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:client_name])]}
+							Nombre
+					%th
+						= link_to url_for(params.merge(order: :state, direction: order_value(@headers[:state]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:state])]}
+							Estado
+					%th Contacto
+					%th Teléfono
+					%th
+					- if current_user.admin
+						%th
+				%tbody
+				- @clients.each do |client|
+					%tr
+						%td= link_to client.name, client_path(client)
+						%td= client.state
+						%td= client.contacts.first.name if !client.contacts.first.nil?
+						%td= client.contacts.first.telephone if !client.contacts.first.nil?
+						- if can? :update, client
+							%td= link_to "Editar", edit_client_path(client)
+						- if can? :destroy, client
+							%td= link_to 'Borrar', client_path(client), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+		.clear
+.text-center
+	= paginate @clients

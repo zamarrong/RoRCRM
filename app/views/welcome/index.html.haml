@@ -1,0 +1,36 @@
+- if user_signed_in?
+	- if can? :read, Client
+		.index-icon
+			= link_to image_tag('icons/Cliente.png'), clients_path
+			%label Clientes
+	- if can? :read, Opportunity
+		.index-icon
+			= link_to image_tag('icons/OportundiadesCotizaciones.png'), opportunities_path
+			%label Oportunidades
+	- if can? :read, Product
+		.index-icon
+			= link_to image_tag('icons/Inventario.png'), products_path
+			%label Inventario
+	- if can? :read, Requirement
+		.index-icon
+			= link_to image_tag('icons/Requerimientos.png'), requirements_path
+			%label Requeremientos
+	- if can? :read, Supplier
+		.index-icon
+			= link_to image_tag('icons/Proveedores.png'), suppliers_path
+			%label Proveedores
+	- if can? :read, PurchaseOrder
+		.index-icon
+			= link_to image_tag('icons/Compras.png'), purchase_orders_path
+			%label Compras
+	- if can? :read, ShippingAddress
+		.index-icon
+			= link_to image_tag('icons/InforamacionDeEnvio.png'), shipping_addresses_path
+			%label Información de envio
+	- if can? :read, User
+		.index-icon
+			= link_to image_tag('icons/Usuarios.png'), employees_path
+			%label Usuarios
+	
+
+

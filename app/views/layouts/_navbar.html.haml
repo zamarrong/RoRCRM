@@ -1,0 +1,53 @@
+#navbar
+	%div{class: ['navbar', 'navbar-default'], role: 'navigation'}
+		.navbar-header
+			= link_to image_tag('logo.png'), root_url, class: 'navbar-brand'
+			%button.navbar-toggle{type: "button", "data-toggle"=>"collapse", "data-target"=>".navbar-ex1-collapse"}
+				%span.icon-bar
+				%span.icon-bar
+				%span.icon-bar
+			.clear
+		.collapse.navbar-collapse.navbar-ex1-collapse
+			%ul{class: ['nav', 'navbar-nav', 'pull-right'], role: 'navigation'}
+				- if user_signed_in?
+					- if not current_page?(:controller => 'welcome', :action => 'index')
+						- if can? :read, Client
+							%li
+								= link_to image_tag('icons/Cliente.png'), clients_path
+								%label Clientes
+						- if can? :read, Opportunity
+							%li
+								= link_to image_tag('icons/OportundiadesCotizaciones.png'), opportunities_path
+								%label Oportunidades
+						- if can? :read, Product
+							%li
+								= link_to image_tag('icons/Inventario.png'), products_path
+								%label Inventario
+						- if can? :read, Requirement
+							%li
+								= link_to image_tag('icons/Requerimientos.png'), requirements_path
+								%label Requerimientos
+						- if can? :read, Supplier
+							%li
+								= link_to image_tag('icons/Proveedores.png'), suppliers_path
+								%label Proveedores
+						- if can? :read, PurchaseOrder
+							%li
+								= link_to image_tag('icons/Compras.png'), purchase_orders_path
+								%label Compras
+						- if can? :read, ShippingAddress
+							%li
+								= link_to image_tag('icons/InforamacionDeEnvio.png'), shipping_addresses_path
+								%label Info de envio
+						- if can? :read, User
+							%li
+								= link_to image_tag('icons/Usuarios.png'), employees_path
+								%label Usuarios
+					%li.dropdown
+						= link_to employee_path(current_user) do 
+							= current_user.name
+							- if current_user.reminder_count > 0
+								%span{class: 'badge'}
+									= current_user.reminder_count
+				- else
+					%li= link_to 'Iniciar sesión', new_user_session_path

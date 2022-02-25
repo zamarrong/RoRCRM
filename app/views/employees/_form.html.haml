@@ -1,0 +1,101 @@
+= form_for @employee, :url => employee_form_url(@action, @employee) do |f|
+	.col-md-5
+		.col-md-4 Nombre
+		.col-md-8
+			= f.text_field :first_name, class: "form-control", required: 'required'
+		.col-md-4 Apellidos
+		.col-md-8
+			= f.text_field :last_name, class: "form-control", required: 'required'
+		.col-md-4 Organización
+		.col-md-8
+			= f.text_field :organization, class: "form-control"
+		.col-md-4 Cargo
+		.col-md-8
+			= f.text_field :position, class: "form-control"
+		.col-md-12
+			%label Números de teléfono
+		.col-md-4 Teléfono del trabajo
+		.col-md-8
+			= f.text_field :work_phone, class: "form-control"
+		.col-md-4 Teléfono particular
+		.col-md-8
+			= f.text_field :home_phone, class: "form-control"
+		.col-md-4 Teléfono móvil
+		.col-md-8
+			= f.text_field :mobile_phone, class: "form-control"
+		.col-md-4 Número de fax
+		.col-md-8
+			= f.text_field :fax_number, class: "form-control"
+		.col-md-12
+			%label Dirección
+		.col-md-4 Calle
+		.col-md-8
+			= f.text_field :address, class: "form-control"
+		.col-md-4 Ciudad
+		.col-md-8
+			= f.text_field :city, class: "form-control"
+		.col-md-4 Estado/Provincia
+		.col-md-8
+			= f.text_field :state, class: "form-control"
+		.col-md-4 Código postal
+		.col-md-8
+			= f.text_field :zip_code, class: "form-control"
+		.col-md-4 País o región
+		.col-md-8
+			= f.text_field :country, class: "form-control"
+	.col-md-7
+		.col-md-4
+			= f.file_field :avatar, class: "hidden"
+			.avatar-container.edit-avatar
+				= avatar_image(@employee)
+		.col-md-8
+			.col-md-4 Correo electrónico
+			.col-md-8 
+				= f.text_field :email, class: "form-control", required: 'required'
+			.col-md-4 Página Web
+			.col-md-8
+				= f.text_field :website, class: "form-control"
+		.col-md-12
+			%br
+			Notas
+			= f.text_area :notes, rows: '18', class: "form-control"
+			%br
+			%br
+
+	.narrow-wrapper
+		- if can? :update, @employee
+			.text-center
+				= f.check_box :admin
+				¿Es administrador?
+				%br
+				%br
+			.text-center
+				= check_box_tag 'clients', 1, f.object.roles.include?(:clients) ? true : false
+				Clientes
+				= check_box_tag 'opportunities', 1, f.object.roles.include?(:opportunities) ? true : false
+				Oportunidades
+				= check_box_tag 'products', 1, f.object.roles.include?(:products) ? true : false
+				Inventario
+				= check_box_tag 'requirements', 1, f.object.roles.include?(:requirements) ? true : false
+				Requerimientos
+				= check_box_tag 'suppliers', 1, f.object.roles.include?(:suppliers) ? true : false
+				Proveedores
+				%br
+				%br
+				= check_box_tag 'purchase_orders', 1, f.object.roles.include?(:purchase_orders) ? true : false
+				Compras
+				= check_box_tag 'shipping_addresses', 1, f.object.roles.include?(:shipping_addresses) ? true : false
+				Info de envio
+				= check_box_tag 'users', 1, f.object.roles.include?(:users) ? true : false
+				Usuarios
+				= check_box_tag 'update', 1, f.object.roles.include?(:update) ? true : false
+				Editar
+				= check_box_tag 'destroy', 1, f.object.roles.include?(:destroy) ? true : false
+				Borrar
+				%br
+				%br
+			Contraseña
+			= f.password_field :password, class: "form-control"
+			Confirmar contraseña
+			= f.password_field :password_confirmation, class: "form-control"
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

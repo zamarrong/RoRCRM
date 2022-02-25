@@ -1,0 +1,72 @@
+// Place all the styles related to the PurchaseOrders controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.yellow{
+	background-color: #FCCF7C;
+}
+.dark-yellow{
+	background-color: #CBB07D;
+}
+.purchase-table{
+	width: 100%;
+}
+.dark-red{
+	background-color: #EE1A2C;
+}
+.red{
+	background-color: #FFABB2;
+}
+.dark-blue{
+	background-color: #1E456C;
+}
+.blue{
+	background-color: #73B9FF;
+}
+.purchase-table thead td{
+	padding:0 5px;
+	color: #fff;
+	font-size: 1.1em;
+}
+.centered{
+	text-align: center;
+}
+.right{
+	text-align: right;
+}
+.table-right{
+	float: right;
+}
+.gray{
+	background-color: #bbb;
+	padding: 2px 4px;
+	font-weight: 800;
+}
+.special-comments{
+	padding: 4px 4px;
+	border: 1px solid #bbb;
+	min-height: 40px;
+}
+.bold{
+	font-weight: 800;
+}
+.last-row{
+	border-top: 1px solid #000;
+}
+.money{
+	width:150px;
+	padding: 0 4px;
+}
+.orange{
+	background-color: #EBC088;
+}
+.double-line{
+	border-color: #000;
+	border-top-style: double;
+}
+.normal-border{
+	border: 2px solid #000;	
+}
+.orange-border{
+
+	border: 2px solid #EBC088;	
+}

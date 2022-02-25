@@ -1,0 +1,23 @@
+workbook = xlsx_package.workbook
+@products = Product.where(sold: [false, nil], is_for_hf: [false, nil])
+@products_hf = Product.where(sold: [false, nil], is_for_hf: true)
+@products_sold = Product.where(sold: true)
+title = workbook.styles.add_style(:b => true)
+workbook.add_worksheet(name: "Inventario Frimar") do |sheet|
+  sheet.add_row ["Código","Descripción","Marca","Modelo","Serie","Precio","Notas"], :style => title
+  @products.each do |p|
+    sheet.add_row [p.code, p.description, p.brand, p.model, p.serial, p.price, p.notes]
+  end
+end
+workbook.add_worksheet(name: "Maquinaria vendida") do |sheet|
+  sheet.add_row ["Código","Descripción","Marca","Modelo","Serie","Precio","Notas"], :style => title
+  @products_sold.each do |p|
+    sheet.add_row [p.code, p.description, p.brand, p.model, p.serial, p.price, p.notes]
+  end
+end
+workbook.add_worksheet(name: "Inventario de Herramientas") do |sheet|
+  sheet.add_row ["Código","Descripción","Marca","Modelo","Serie","Precio","Notas"], :style => title
+  @products_hf.each do |p|
+    sheet.add_row [p.code, p.description, p.brand, p.model, p.serial, p.price, p.notes]
+  end
+end

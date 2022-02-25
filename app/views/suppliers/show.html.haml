@@ -1,0 +1,112 @@
+.employee-container
+	.col-md-2
+		.avatar-container
+			= link_to supplier_path(@supplier) do
+				= avatar_image(@supplier)
+	.col-md-9
+		.col-md-12
+			%h2= @supplier.name
+			%p= link_to @supplier.website, website_url(@supplier)
+		.col-md-6
+			%p
+				%label Dirección
+				%br
+				= @supplier.address
+				%br
+				= "#{@supplier.city}, #{@supplier.state}, #{@supplier.zip_code}"
+				%br
+				= @supplier.country
+		.col-md-6
+			%label Términos con el proveedor
+			%p= simple_format @supplier.terms
+		
+	.col-md-1
+		= link_to "Editar", edit_supplier_path(@supplier)
+		= link_to 'Borrar', supplier_path(@supplier), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+	.clear
+.col-md-8
+	%h3 Notas
+	= link_to new_supplier_note_path(@supplier, :parent => "supplier") do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar nota
+		%br
+		%br
+
+	- @supplier.notes.each do |note|
+		%p
+			- if not note.user.blank?
+				= note.user.name
+			%label= note.date.strftime('%d/%m/%Y %l:%M:%S %P')
+			%br
+			= note.content
+			%br
+			= link_to "Editar", edit_note_path(note, :parent => "supplier")
+			= link_to 'Borrar', note_path(note, :parent => "supplier"), :method => :delete, :data => { :confirm => '¿Estas seguro?' }
+
+
+.col-md-4
+	%h3 Contactos
+	= link_to new_supplier_contact_path(@supplier, :parent => "supplier") do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar contacto
+		%br
+		%br
+	- @supplier.contacts.each do |contact|
+		%label.contact-name= contact.name
+		= contact.position
+		%p
+			%label Teléfonos
+			%br
+			= contact.telephone
+			%br
+			= contact.telephone_2
+		%p
+			%label Email
+			%br
+			= contact.email
+		%p
+			= link_to "Editar", edit_contact_path(contact, :parent => "supplier")
+			= link_to 'Borrar', contact_path(contact, :parent => "supplier"), :method => :delete, :data => { :confirm => '¿Estas seguro?' }
+			%br
+			%br
+.col-md-8
+	%h3 Ordenes de compra
+	%table.table.table-hover
+		%thead
+			%th Proveedor
+			%th Empleado
+			%th Moneda
+			%th Fecha de apertura
+			%th Monto total
+			%th Numero de guia
+			%th
+			%th
+		%tbody
+			- @supplier.purchase_orders.each do |purchase_order|
+				%tr
+					%td= purchase_order.supplier.name
+					%td= purchase_order.user.name
+					%td= purchase_order.currency
+					%td= purchase_order.opening_date.strftime('%d/%m/%Y') if !purchase_order.opening_date.nil?
+					%td= number_to_currency(purchase_order.total)
+					%td= purchase_order.shipping_number
+					%td= link_to "Orden de compra", purchase_order_path(purchase_order)
+					%td= link_to "Editar", edit_purchase_order_path(purchase_order)
+					%td= link_to 'Borrar', purchase_order_path(purchase_order), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+.col-md-4
+	%h3 Documentos
+	= form_for [@supplier, @supplier.documents.build] do |f|
+		= link_to '#', class: 'file-input-link' do
+			%span.glyphicon.glyphicon-plus-sign
+			Agregar documento
+			%br
+			%br
+		= f.file_field :content, class: ['hidden', 'hidden-file-input']
+		= f.hidden_field :supplier_id, value: @supplier.id
+	
+	- @supplier.documents.delete(@supplier.documents.last)
+	- @supplier.documents.each do |document|
+		.col-md-6.document-links
+			%p
+				%strong= link_to File.basename(document.content.url), document.content.url
+				= link_to "Borrar", document_path(document), :method => :delete, :data => { :confirm => '¿Estas seguro?' }

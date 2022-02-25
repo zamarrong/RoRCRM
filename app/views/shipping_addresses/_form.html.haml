@@ -1,0 +1,24 @@
+= form_for @shipping_address do |f|
+	.col-md-12
+		%label Nombre
+		= f.text_area :name, class: "form-control", required: 'required'
+	.col-md-12
+		%label Dirección
+		= f.text_area :address, class: "form-control"
+	.col-md-12
+		%label Ciudad
+		= f.text_field :city, class: "form-control"
+	.col-md-12
+		%label Estado
+		= f.text_field :state, class: "form-control"
+	.col-md-12 
+		%label Código postal
+		= f.text_field :zip_code, class: "form-control"
+	.col-md-12
+		%label Teléfono 1
+		= f.text_field :telephone_1, class: "form-control"
+	.col-md-12
+		%label Teléfono 2
+		= f.text_field :telephone_2, class: "form-control"
+	.col-md-12
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

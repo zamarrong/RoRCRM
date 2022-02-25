@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  company: MyString
+  language: MyString
+  supplier_id: 1
+  contact_id: 1
+  shipping_address_id: 1
+  currency: MyString
+  opening_date: 2015-04-07
+  shipping_and_handling: 9.99
+  other_charges: 9.99
+  special_notes: MyText
+  folio: 1
+
+two:
+  company: MyString
+  language: MyString
+  supplier_id: 1
+  contact_id: 1
+  shipping_address_id: 1
+  currency: MyString
+  opening_date: 2015-04-07
+  shipping_and_handling: 9.99
+  other_charges: 9.99
+  special_notes: MyText
+  folio: 1

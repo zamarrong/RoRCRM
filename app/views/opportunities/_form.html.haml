@@ -1,0 +1,78 @@
+= form_for @opportunity do |f|
+	.col-md-5
+		.col-md-4 Empresa
+		.col-md-8
+			= f.select :company, options_for_select(['Industrias Frimar','Herramientas Frimar'], @opportunity.company), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-4 Cliente
+		.col-md-8
+			#clients
+				= text_field_tag 'client_name', '', class: 'form-control typeahead', value: (@opportunity.client.name unless @opportunity.client.blank?)
+			%br
+			= f.hidden_field :client_id, id: 'client_id'
+		.col-md-4 Contacto
+		.col-md-8
+			= f.select :contact_id, options_for_select( contact_options(@opportunity), (@opportunity.contact.id unless @opportunity.contact.nil?)), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-4 
+		.col-md-8
+			= f.hidden_field :user_id
+		.col-md-4 Moneda
+		.col-md-8
+			= f.select :currency, options_for_select(['Dolares','Pesos'], @opportunity.currency), {include_blank: true}, class: "form-control"
+		.col-md-4 Valoración
+		.col-md-8
+			= f.select :valuation, options_for_select(['Caliente','Templada', 'Fria'], @opportunity.valuation), {include_blank: true}, class: "form-control"
+		.col-md-4 Cómo se encontró
+		.col-md-8
+			= f.select :how_was_it_found, options_for_select(['Visita a empresa','Recomendación de cliente','Anuncio','Guía telefónica','Convención','Llamada fría', 'Internet','Antiguo cliente'], @opportunity.how_was_it_found), {include_blank: true}, class: "form-control"
+		.col-md-4 Fecha de apertura
+		.col-md-8
+			.input-append.date.input-group
+				= f.text_field :opening_date, 'data-format' => "dd/MM/yyyy", class: 'form-control'
+				%span.add-on.input-group-addon
+					%i.glyphicon.glyphicon-calendar
+		.col-md-4 Fecha de vencimiento
+		.col-md-8
+			.input-append.date.input-group
+				= f.text_field :due_date, 'data-format' => "dd/MM/yyyy", class: 'form-control'  
+				%span.add-on.input-group-addon
+					%i.glyphicon.glyphicon-calendar
+		.col-md-4 Impuesto
+		.col-md-8
+			.input-append.input-group
+				= f.number_field :tax, class: 'form-control', step: 'any'
+				%span.add-on.input-group-addon
+					= "%"
+		.col-md-4 Precio
+		.col-md-8
+			= f.number_field :price, class: "form-control", step: 'any' 
+		.col-md-4 IVA
+		.col-md-8
+			= text_field_tag "iva",'', class: "form-control", readonly: "readonly", value: @opportunity.price.to_f*(@opportunity.tax.to_f/100)
+		.col-md-4 Condiciones de pago
+		.col-md-8
+			= f.text_area :payment_conditions, class: "form-control", rows: "4"
+		.col-md-4 Notas especiales
+		.col-md-8
+			= f.text_area :special_notes, class: "form-control", rows: "4"
+		.col-md-4 Cerrado
+		.col-md-8
+			= f.check_box :closed
+	.col-md-7
+		.col-md-3
+			%label Código
+		.col-md-2
+			%label Cantidad
+		.col-md-4
+			%label Descripción
+		.col-md-3
+			%label Precio unitario
+		= f.fields_for :quotes do |ff|
+			= render 'quote_fields', :f => ff
+		.col-md-12
+			= link_to_add_fields "Agregar elemento", f, :quotes
+			%br
+			%br
+
+		
+	.narrow-wrapper
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

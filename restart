@@ -1,0 +1,7 @@
+cd /var/www/html/sistema
+RAILS_ENV=production rake db:migrate
+RAILS_ENV=production rake assets:precompile
+serverpid=$(cat tmp/pids/server.pid)
+kill -9 $serverpid
+RAILS_ENV=production rails s -d -p 5000
+exit 0

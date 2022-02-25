@@ -1,0 +1,14 @@
+.fields.purchase-item-fields
+	.col-md-2
+		= f.text_field :quantity, class: "form-control total-change quantity"
+	.col-md-3
+		= f.text_field :part_number, class: "form-control", required: 'required'
+	.col-md-5
+		= f.text_area :description, class: "form-control resize-text", required: 'required'
+	.col-md-2
+		= f.text_field :price, class: "form-control total-change price", required: 'required'
+	.col-md-12
+		= f.hidden_field :id
+		= link_to_remove_fields "Borrar", f
+		%br
+		%br

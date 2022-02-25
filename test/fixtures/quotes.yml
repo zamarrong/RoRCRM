@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: MyString
+  quantity: 9.99
+  price: 9.99
+
+two:
+  description: MyString
+  quantity: 9.99
+  price: 9.99

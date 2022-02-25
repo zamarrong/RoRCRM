@@ -1,0 +1,14 @@
+= form_for [@reminder.user, @reminder] do |f|
+	.col-md-12
+		%label Fecha
+		.input-append.date-time.input-group
+			= f.text_field :date, 'data-format' => "dd/MM/yyyy", class: 'form-control', value: Time.now.strftime("%d/%m/%Y")
+			%span.add-on.input-group-addon
+				%i.glyphicon.glyphicon-calendar
+		%label Nota
+		= f.text_area :text, class: 'form-control', rows: '10'
+		= f.hidden_field :user_id, value: params[:employee_id]
+		= f.hidden_field :user_assigning_id, value: current_user.id
+		%br
+		%br
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

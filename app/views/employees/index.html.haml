@@ -1,0 +1,63 @@
+.col-md-9
+	%h2 Empleados
+	%br
+	= link_to "Nuevo empleado", new_employee_path, class: ['btn', 'btn-default']
+	%br
+	%br
+.col-md-3
+	%br
+	= form_tag employees_path, :method => :get do
+		.input-group
+			= text_field_tag :search, params[:search], class: 'form-control'
+			%span.search-addon.input-group-addon
+				= button_tag type: 'submit' do
+					%i.glyphicon.glyphicon-search
+
+.clear
+- if @employees.blank?
+	.col-md-12
+		%p No se encontro ningun empleado
+- @employees.each do |employee|
+	.employee-container
+		.col-md-2
+			.avatar-container
+				= link_to employee_path(employee) do
+					= avatar_image(employee)
+		.col-md-3
+			%p= employee.name
+			%p= "#{employee.position}, #{employee.organization}"
+			%p
+				%label Números de teléfono
+				%br
+				= "Trabajo: #{employee.work_phone}"
+				%br
+				= "Particular: #{employee.home_phone}"
+				%br
+				= "Móvil: #{employee.mobile_phone}"
+				%br
+				= "Fax: #{employee.fax_number}"
+		.col-md-3
+			%p= mail_to employee.email
+			%p= link_to employee.website, website_url(employee)
+			%p
+				%label Dirección
+				%br
+				= employee.address
+				%br
+				= "#{employee.city}, #{employee.state}, #{employee.zip_code}"
+				%br
+				= employee.country
+		.col-md-3
+			%p
+				%label Notas
+				%br
+				= employee.notes
+		.col-md-1
+			- if can? :update, employee
+				= link_to "Editar", edit_employee_path(employee)
+			- if can? :destroy, employee
+				= link_to 'Borrar', employee_path(employee), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+		.clear
+
+.text-center
+	= paginate @employees

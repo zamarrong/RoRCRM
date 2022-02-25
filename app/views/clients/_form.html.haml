@@ -1,0 +1,53 @@
+= form_for @client do |f|
+	.col-md-2
+		= f.file_field :avatar, class: "hidden", id: "user_avatar"
+		.avatar-container.edit-avatar
+			= avatar_image(@client)
+	.col-md-5
+		.col-md-3 Empresa
+		.col-md-9
+			= f.select :company, options_for_select(['Industrias Frimar','Herramientas Frimar','Ambos'], @client.company), {include_blank: true}, class: "form-control", required: 'required'
+		.col-md-12
+			%label Datos generales
+		.col-md-3 Organización
+		.col-md-9
+			= f.text_field :name, class: "form-control", required: 'required'
+		.col-md-3 Página Web
+		.col-md-9
+			= f.text_field :website, class: "form-control"
+		.col-md-12
+			%label Dirección
+		.col-md-3 País o región
+		.col-md-9
+			= f.select :country, options_for_select(['','México','Estados Unidos','Otro'], @client.country),{},class: "form-control", id: "form-country"	
+			#other-country
+				- if @client.country != 'México' and @client.country != 'Estados Unidos'
+					= f.text_field :country, class: 'form-control'
+		.col-md-3 Estado/Provincia
+		.col-md-9
+			= f.select :state, options_for_select(state_options(@client.country),@client.state),{},class: "form-control", id: "form-state"
+			#other-state
+				- if @client.country != 'México' and @client.country != 'Estados Unidos'
+					= f.text_field :state, class: 'form-control'
+		.col-md-3 Ciudad
+		.col-md-9
+			= f.text_field :city, class: "form-control"
+		.col-md-3 Calle
+		.col-md-9
+			= f.text_field :address, class: "form-control"
+		.col-md-3 Código postal
+		.col-md-9
+			= f.text_field :zip_code, class: "form-control"
+		
+			%br
+			%br
+	.col-md-5
+		= f.fields_for :contacts do |ff|
+			= render 'contact_fields', :f => ff
+		.col-md-12
+			= link_to_add_fields "Agregar contacto", f, :contacts
+			%br
+			%br
+	
+	.narrow-wrapper
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

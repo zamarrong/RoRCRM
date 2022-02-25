@@ -1,0 +1,66 @@
+= form_for @product do |f|
+	.col-md-12
+		%label Código
+		= f.text_field :code, class: 'form-control'
+	.col-md-12
+		%label Descripción
+		= f.text_area :description, class: 'form-control'
+	.col-md-12
+		%label Marca
+		= f.text_field :brand, class: 'form-control'
+	.col-md-12
+		%label Modelo
+		= f.text_field :model, class: 'form-control'
+	.col-md-12
+		%label Serie
+		= f.text_field :serial, class: 'form-control'
+	- if current_user.admin
+		.col-md-6
+			%label Inversión
+			= f.number_field :investment, class: 'form-control profit-change', step: 'any'
+		.col-md-6
+			%label Notas
+			= f.text_field :investment_notes, class: 'form-control'
+		= f.fields_for :costs do |ff|
+			= render 'cost_fields', :f => ff
+		.col-md-12
+			= link_to_add_fields "Agregar costo", f, :costs
+		.col-md-6
+			%label Precio
+			= f.number_field :price, class: 'form-control profit-change', step: 'any'
+		.col-md-6
+			%label Notas
+			= f.text_field :price_notes, class: 'form-control'
+		.col-md-6
+			%label Utilidad
+			= text_field_tag 'profit', f.object.profit, class: 'form-control', readonly: 'readonly', id: "product-profit"
+		.col-md-6
+			%label Notas
+			= f.text_field :profit_notes, class: 'form-control'
+	.col-md-12
+		%label Año
+		= f.number_field :year, class: 'form-control', step: 'any'
+	.col-md-12
+		%label Número de pedimento o factura
+		= f.text_field :requirement_id, class: 'form-control', step: 'any'
+	.col-md-12
+		%label Notas
+		= f.text_area :notes, rows: '3', class: 'form-control'
+	.col-md-12
+		%label Video
+		= f.text_field :video, class: 'form-control'
+	.col-md-12
+		= f.file_field :image, class: "hidden"
+		.image-container.edit-image
+			= product_image(@product)
+	.col-md-12
+		= f.check_box :is_not_here
+		%label Maquinaria ya no esta en nuestras instalaciones	
+	.col-md-12
+		= f.check_box :is_sold_and_here
+		%label Maquinaria vendida y posiblemente en nuestras instalaciones	
+	.col-md-12
+		= f.check_box :has_issues
+		%label Hay algun pendiente con la maquina	
+	.col-md-12
+		= f.submit 'Guardar', :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

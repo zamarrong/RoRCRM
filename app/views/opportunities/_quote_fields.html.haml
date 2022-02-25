@@ -1,0 +1,15 @@
+.fields.quote-fields
+	.col-md-3
+		%input{type: 'text', class: 'form-control product-code'}
+		= f.hidden_field :product_id, class: 'quote-product-id'
+	.col-md-2
+		= f.text_field :quantity, class: "form-control quote-quantity", required: 'required'
+	.col-md-4
+		= f.text_area :description, class: "form-control quote-description", required: 'required'
+	.col-md-3
+		= f.text_field :price, class: "form-control quote-price", required: 'required'
+	.col-md-12
+		= f.hidden_field :id
+		= link_to_remove_fields "Borrar", f
+		%br
+		%br

@@ -1,0 +1,29 @@
+.narrow-wrapper
+  %h2 Cambiar contraseña
+
+  = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+    = devise_error_messages!
+
+    %div.hidden
+      = f.label :email 
+      %br
+      = f.email_field :email, :autofocus => true, :class => "form-control"
+
+    %div
+      = f.label "Nueva contraseña"
+      %br
+      = f.password_field :password, :autocomplete => "off", :class => "form-control"
+
+    %div
+      = f.label "Confirmar contraseña"
+      %br
+      = f.password_field :password_confirmation, :class =>"form-control"
+
+    %div
+      = f.label "Contraseña actual"
+      %i (necesitamos tu contraseña actual para confirmar los cambios)
+      %br
+      = f.password_field :current_password, :class => "form-control"
+
+    %div
+      = f.submit "Actualizar", :class => ['btn', 'btn-lg', 'btn-primary', 'btn-block']

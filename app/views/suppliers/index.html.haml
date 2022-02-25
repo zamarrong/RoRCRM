@@ -1,0 +1,58 @@
+.col-md-6
+	%h2 Proveedores
+	%br
+	= link_to "Nuevo proveedor", new_supplier_path, class: ['btn', 'btn-default']
+
+	%br
+	%br
+.col-md-2
+	%label Resultados por página
+	= select_tag "per_page", options_for_select(['25','50','100','Ver todos'], cookies[:per_page]),{class: 'form-control'}
+.col-md-2
+	%label Ver por estado:
+	= form_tag suppliers_path, :method => "get", id: "state_form" do |f|
+		= select_tag "state" , options_for_select(['','Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas','Chihuahua','Coahuila','Colima','Distrito Federal','Durango','Estado de México','Guanajuato','Guerrero','Hidalgo','Jalisco','Michoacán','Morelos','Nayarit','Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí','Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas','Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','District of Columbia','Puerto Rico','Guam','American Samoa','U.S. Virgin Islands','Northern Mariana Islands']), {class: 'form-control'} 
+.col-md-2
+	%br
+	= form_tag suppliers_path, :method => :get do
+		#clients
+			= text_field_tag :search, params[:search], class: 'typeahead form-control'
+			%span.search-addon.input-group-addon
+				= button_tag type: 'submit' do
+					%i.glyphicon.glyphicon-search
+
+.clear
+- if @suppliers.blank?
+	.col-md-12
+		%p No se encontro ningun proveedor
+- else
+	.employee-container
+		.col-md-12
+			%table.table.table-hover
+				%thead
+					%th 
+						= link_to url_for(params.merge(order: :supplier_name, direction: order_value(@headers[:supplier_name]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:supplier_name])]}
+							Nombre
+					%th
+						= link_to url_for(params.merge(order: :state, direction: order_value(@headers[:state]))) do
+							%span{class: ['glyphicon', icon_class(@headers[:state])]}
+							Estado
+					%th Contacto
+					%th Teléfono
+					%th
+					%th
+				%tbody
+				- @suppliers.each do |supplier|
+					%tr
+						%td= link_to supplier.name, supplier_path(supplier)
+						%td= supplier.state
+						%td= supplier.contacts.first.name if !supplier.contacts.first.nil?
+						%td= supplier.contacts.first.telephone if !supplier.contacts.first.nil?
+						- if can? :update, supplier
+							%td= link_to "Editar", edit_supplier_path(supplier)
+						- if can? :destroy, supplier
+							%td= link_to 'Borrar', supplier_path(supplier), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+		.clear
+.text-center
+	= paginate @suppliers

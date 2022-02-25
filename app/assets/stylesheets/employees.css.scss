@@ -1,0 +1,81 @@
+// Place all the styles related to the Employees controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.avatar-container{
+	overflow:hidden;
+}
+.avatar-container img{
+	max-width: 100%;
+}
+.employee-container{
+	margin: 10px 0;
+}
+.postit {    
+  text-align:center;     
+  width: 275px;    
+  margin: 25px;    
+  min-height:250px;
+  max-height:250px;
+  position:relative;   
+  border:1px solid #E8E8E8;  
+  border-top:40px solid #fdfd86;    
+  font-size:18px;      
+  border-bottom-right-radius: 60px 5px;
+  display:inline-block;    
+   background: #ffff88; /* Old browsers */
+background: -moz-linear-gradient(-45deg, #ffff88 81%, #ffff88 82%, #ffff88 82%, #ffffc6 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right bottom, color-stop(81%,#ffff88), color-stop(82%,#ffff88), color-stop(82%,#ffff88), color-stop(100%,#ffffc6)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* IE10+ */
+background: linear-gradient(135deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff88', endColorstr='#ffffc6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+ 
+.postit:after {     
+   content: "";
+  position:absolute;
+  z-index:-1;
+  right:-0px; bottom:20px;
+  width:200px;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow:2px 15px 5px rgba(0, 0, 0, 0.40);
+-moz-transform: matrix(-1, -0.1, 0, 1, 0, 0);
+ -webkit-transform: matrix(-1, -0.1, 0, 1, 0, 0);
+      -o-transform: matrix(-1, -0.1, 0, 1, 0, 0);
+     -ms-transform: matrix(-1, -0.1, 0, 1, 0, 0);
+         transform: matrix(-1, -0.1, 0, 1, 0, 0);
+}
+a.boxclose{
+    float:right;
+   	position:absolute;
+   	top:-50px;
+   	left:-10px;
+    cursor:pointer;
+    color: #fff;
+    border: 1px solid #AEAEAE;
+    border-radius: 30px;
+    background: #000;
+    font-size: 25px;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;       
+}
+a.boxclose:hover{
+	text-decoration: none;
+}
+.boxclose:before {
+    content: "×";
+    display: block;
+    margin-top:-3px;
+}
+.performance-link{
+  cursor: pointer;
+  color: #428bca;
+  margin:0px 15px;
+}
+.performance-link:hover{
+  text-decoration:underline;
+}

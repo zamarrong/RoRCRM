@@ -1,0 +1,91 @@
+.hidden
+	#employee-id= @employee.id
+.employee-container
+	.col-md-2
+		.avatar-container
+			= link_to employee_path(@employee) do
+				= avatar_image(@employee)
+	.col-md-3
+		%h2= @employee.name
+		%p= link_to @employee.website, website_url(@employee), :target => "_blank"
+		%p
+			%label Dirección
+			%br
+			= @employee.address
+			%br
+			= "#{@employee.city}, #{@employee.state}, #{@employee.zip_code}"
+			%br
+			= @employee.country
+	.col-md-7
+		%label Ver periodo:
+		%br
+		%span#monthly-performance.performance-link Mensual
+		%span#trimonthly-performance.performance-link Trimestral
+		%span#anual-performance.performance-link Anual
+		#chart_div
+
+	.col-md-1
+		- if current_user.admin
+			= link_to "Editar", edit_client_path(@employee)
+			= link_to 'Borrar', client_path(@employee), :method => :delete, :data => { :confirm => '¿Estas seguro?' } 
+	.clear
+
+.col-md-12
+	%h3 Recordatorios
+	= link_to new_employee_reminder_path(@employee) do
+		%span.glyphicon.glyphicon-plus-sign
+		Agregar recordatorio
+		%br
+		%br
+
+	- @employee.reminders.each do |reminder|
+		.postit
+			= reminder.user_assigning.name
+			%br
+			%label= reminder.date.strftime('%d/%m/%Y')
+			%br
+			= reminder.text
+			= link_to '', reminder_path(reminder), :method => :delete, :data => { :confirm => '¿Estas seguro?' }, :class => 'boxclose'
+.col-md-3.right-border
+	%h3 Clientes recientes
+	%table.table.table-hover
+		%thead
+			%th Cliente
+		%tbody
+			- Client.order(created_at: :desc).first(20).each do |client|
+				%tr
+					%td= link_to client.name, client_path(client)
+.col-md-5.right-border
+	%h3 Cotizaciones
+	- if @employee.opportunities.blank?
+		%p No se encontro ninguna cotización
+	- else
+		%table.table.table-hover
+			%thead
+				%th Folio
+				%th Cliente
+				%th Fecha de vencimiento
+				%th Moneda
+				%th Monto
+			%tbody
+				- @employee.opportunities.order(created_at: :desc).first(20).each do |opportunity|
+					%tr
+						%td= link_to opportunity.full_folio, cotizacion_opportunity_path(opportunity)
+						%td= opportunity.client.name
+						%td= opportunity.due_date.strftime('%d/%m/%Y') if !opportunity.due_date.nil?
+						%td= opportunity.currency
+						%td= number_to_currency(opportunity.price)
+					
+.col-md-4
+	%h3 Ventas cerradas
+	%table.table.table-hover
+		%thead
+			%th Cliente
+			%th Usuario
+			%th Monto
+		%tbody
+			- Opportunity.where(closed: true).order(created_at: :desc).first(20).each do |opportunity|
+				%tr
+					%td= opportunity.client.name
+					%td= opportunity.user.name
+					%td= number_to_currency(opportunity.price)

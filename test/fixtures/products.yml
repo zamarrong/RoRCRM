@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: MyString
+  description: MyString
+  brand: MyString
+  model: MyString
+  serial: MyString
+  price: 9.99
+  notes: MyText
+  is_not_here: false
+  is_sold_and_here: false
+  has_issues: false
+
+two:
+  code: MyString
+  description: MyString
+  brand: MyString
+  model: MyString
+  serial: MyString
+  price: 9.99
+  notes: MyText
+  is_not_here: false
+  is_sold_and_here: false
+  has_issues: false
